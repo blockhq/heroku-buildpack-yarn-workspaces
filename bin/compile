@@ -1,0 +1,24 @@
+#!/bin/sh
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+if [ ! -f "$ENV_DIR/APP_ROOT" ]; then
+  echo "APP_ROOT not set. Aborting."
+  exit 1
+fi
+
+APP_ROOT="$(cat "$ENV_DIR/APP_ROOT")"
+
+if [ ! -d "$BUILD_DIR/$APP_ROOT" ]; then
+  echo "No project found at $APP_ROOT. Aborting."
+  exit 1
+fi
+
+# Pull in the selected app to the root directory
+rsync -r "$BUILD_DIR/$APP_ROOT/" $BUILD_DIR/ --exclude "node_modules"
+
+# Delete the original sub-directory and node_modules symlink
+rm "$BUILD_DIR/node_modules/$APP_ROOT"
+rm -rf "$BUILD_DIR/$APP_ROOT"

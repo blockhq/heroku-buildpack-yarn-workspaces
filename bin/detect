@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Yarn Workspace Build"
+exit 0
